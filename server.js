@@ -83,7 +83,6 @@ console.log("URI leída:", process.env.MONGO_URI ? "OK" : "UNDEFINED");
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Conectado a MongoDB Atlas');
-    // Usar el puerto dinámico que Render asigna
     app.listen(PORT, () => {
       console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
     });
