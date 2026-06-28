@@ -86,4 +86,3 @@ mongoose.connect(process.env.MONGO_URI)
     app.listen(PORT, () => console.log(`🚀 Servidor corriendo en puerto ${PORT}`));
   })
   .catch(err => console.error('❌ Error de conexión:', err));
-
