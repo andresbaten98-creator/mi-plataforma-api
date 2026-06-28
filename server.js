@@ -78,10 +78,9 @@ app.post('/subir', upload.single('mp3'), async (req, res) => {
 });
 
 // 4. CAMBIADO: Conexión a Atlas con .env
-console.log("URI leída:", process.env.MONGODB_URI ? "OK" : "UNDEFINED")
-mongoose.connect(process.env.MONGODB_URI)
+console.log("URI leída:", process.env.MONGO_URI ? "OK" : "UNDEFINED")
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Conectado a MongoDB Atlas');
-    app.listen(PORT, () => console.log(`🚀 http://localhost:${PORT}`));
-  })
+   app.listen(process.env.PORT || PORT, () => console.log(`🚀 http://localhost:${process.env.PORT || PORT}`));
   .catch(err => console.error('❌ Error de conexión:', err))
