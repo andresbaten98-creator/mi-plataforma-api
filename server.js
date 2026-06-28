@@ -1,20 +1,20 @@
-require('dotenv').config()  // 1. AGREGADO ARRIBA DE TODO
+require('dotenv').config();  // 1. Para leer variables de entorno
 const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');  // 2. AGREGADO para crear carpeta
+const fs = require('fs');
 
 const app = express();
-const PORT = process.env.PORT || 3000;  // 3. CAMBIADO para que lea .env
+const PORT = process.env.PORT || 3000;
 
-// Crear carpeta uploads si no existe - evita error
+// Crear carpeta uploads si no existe
 const uploadsDir = './uploads/';
 if (!fs.existsSync(uploadsDir)){
     fs.mkdirSync(uploadsDir);
 }
 
-// Config para guardar mp3
+// Configuración de Multer para guardar mp3
 const storage = multer.diskStorage({
   destination: './uploads/',
   filename: (req, file, cb) => {
@@ -35,7 +35,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
 
-// Página con formulario + lista
+// Página principal
 app.get('/', async (req, res) => {
   try {
     const canciones = await Cancion.find().sort({ fecha: -1 });
@@ -62,11 +62,11 @@ app.get('/', async (req, res) => {
     
     res.send(html);
   } catch (err) {
-    res.send('Error: ' + err.message)
+    res.send('Error: ' + err.message);
   }
 });
 
-// Ruta para subir
+// Ruta para subir canciones
 app.post('/subir', upload.single('mp3'), async (req, res) => {
   const nuevaCancion = new Cancion({
     titulo: req.body.titulo,
@@ -77,10 +77,15 @@ app.post('/subir', upload.single('mp3'), async (req, res) => {
   res.redirect('/');
 });
 
-// 4. CAMBIADO: Conexión a Atlas con .env
-console.log("URI leída:", process.env.MONGO_URI ? "OK" : "UNDEFINED")
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log('✅ Conectado a MongoDB Atlas');
-   app.listen(process.env.PORT || PORT, () => console.log(`🚀 http://localhost:${process.env.PORT || PORT}`));
-  .catch(err => console.error('❌ Error de conexión:', err))
+// Conexión a MongoDB Atlas
+console.log("URI leída:", process.env.MONGO_URI ? "OK" : "UNDEFINED");
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => {
+  console.log('✅ Conectado a MongoDB Atlas');
+  app.listen(PORT, () => console.log(`🚀 Servidor corriendo en puerto ${PORT}`));
+})
+.catch(err => console.error('❌ Error de conexión:', err));
