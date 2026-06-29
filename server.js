@@ -1,25 +1,22 @@
-1 import express from 'express';
-2 import mongoose from 'mongoose';
-3 import multer from 'multer';
-4 import path from 'path';
-5 import { fileURLToPath } from 'url';
-6 import fs from 'fs';
-
-7 const app = express();
-8 const __filename = fileURLToPath(import.meta.url);
-9 const __dirname = path.dirname(__filename);
-
-10 // Crea la carpeta uploads si no existe
-11 if (!fs.existsSync(path.join(__dirname, 'uploads'))) {
-12   fs.mkdirSync(path.join(__dirname, 'uploads'));
-13 }
+import express from 'express';
+import mongoose from 'mongoose';
+import multer from 'multer';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Crea la carpeta uploads si no existe - Fix para Render
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
+
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(uploadsDir));
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ Conectado a MongoDB Atlas'))
@@ -34,7 +31,7 @@ const CancionSchema = new mongoose.Schema({
 const Cancion = mongoose.model('Cancion', CancionSchema);
 
 const storage = multer.diskStorage({
-  destination: 'uploads/',
+  destination: uploadsDir,
   filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
 });
 const upload = multer({ storage });
