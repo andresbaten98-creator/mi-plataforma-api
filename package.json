@@ -4,7 +4,7 @@
   "description": "Proyecto de pruebas con Node.js y MongoDB",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.mjs"
   },
   "keywords": [],
   "author": "",
