@@ -2,9 +2,9 @@
   "name": "mi-plataforma",
   "version": "1.0.0",
   "description": "Proyecto de pruebas con Node.js y MongoDB",
-  "main": "servidor.mjs",
+  "main": "server.mjs",
   "scripts": {
-    "start": "node servidor.mjs"
+    "start": "node server.mjs"
   },
   "keywords": [],
   "author": "",
